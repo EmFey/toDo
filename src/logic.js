@@ -16,4 +16,4 @@ const deleteProject = (projectsList, deletedProjectIndex) => {
     projectsList.splice(deletedProjectIndex, 1);
 };
 
-export { createProject, deleteProject };
+export { createProject as Project, deleteProject };

@@ -1,70 +1,320 @@
-/* Style the body and main container */
-body {
-    font-family: Arial, sans-serif;
+html, body {
     margin: 0;
     padding: 0;
-    background-color: #f2f2f2;
-}
-
-#app {
-    display: flex;
-    height: 100vh;
-}
-
-/* Style the navigation section */
-.nav-section {
-    flex: 1;
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.tabs {
-    margin-bottom: 20px;
-}
-
-.tabs button {
-    background-color: #555;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    margin: 5px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-#add-project {
-    background-color: #007acc;
-}
-
-#add-project:hover {
-    background-color: #005eaa;
-}
-
-/* Style the content section */
-.content-section {
-    flex: 2;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 20px;
 }
 
 #content {
-    margin-bottom: 20px;
+    display: flex;
 }
 
-#add-todo {
-    background-color: #007acc;
-    color: #fff;
+#sidebar {
+    height: 93vh;
+    width: 20vw;
+    border-right: groove thin;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #333;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#sidebar-top-wrapper {
+    text-align: center;
+}
+
+#new-project {
+    background: #009933;
+    color: white;
+    height: 2rem;
+    font-size: 1.1rem;
+    font-weight: bolder;
+    border: thin;
+}
+
+#new-project:hover {
+    background: hsl(140, 100%, 45%);
+}
+
+/*Styling for list of projects in the sidebar*/
+#projects-list {
+    width: 20vw;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/*Styling for the buttons in the sidebar*/
+.project-sidebar {
+    height: 2rem;
+    color: black;
+    font-weight: bolder;
     border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 4px;
+    background: #f2f2f2;
+    text-align: left;
+    padding-left: 4rem;
 }
 
-#add-todo:hover {
-    background-color: #005eaa;
+.project-sidebar:hover {
+    background: #d6d6c2;
+}
+
+#project-full {
+    padding: 0rem 1.5rem;
+    height: 93vh;
+    width: 80%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#project-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo {
+    border: solid thin;
+    padding: 0rem 0.3rem;
+}
+
+.todo-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo-name-and-date {
+    display: flex;
+}
+
+.todo-details-hidden {
+    display: none;
+}
+
+.todo-completed {
+    text-decoration: line-through;
+    color: hsl(0, 0%, 30%);
+}
+
+.high-priority {
+    background-color: #ff8080;
+}
+
+.medium-priority {
+    background-color: #ffff66;
+}
+
+.low-priority {
+    background: #66ff66;
+}
+
+#new-todo {
+    height: 2rem;
+    font-size: 1.1rem;
+    font-weight: bolder;
+    background: hsl(140, 100%, 30%);
+    color: white;
+    border: thin;
+}
+
+#new-todo:hover {
+    background: hsl(140, 100%, 45%);
+}
+
+.expand-todo,
+.edit-button,
+.check-todo {
+    height: 2rem;
+    font-size: 1.1rem;
+    font-weight: bolder;
+    color: white;
+    border: thin;
+}
+
+.expand-todo {
+    background: hsl(210, 100%, 60%);
+    width: 2rem;
+}
+
+.expand-todo:hover {
+    background: hsl(210, 100%, 75%);
+}
+.edit-button {
+    background: hsl(60, 19%, 25%);
+}
+
+.edit-button:hover {
+    background: hsl(60, 19%, 40%);
+}
+
+.check-todo {
+    background: hsl(260, 100%, 70%);
+}
+
+.check-todo:hover {
+    background: hsl(260, 100%, 85%);
+}
+
+.delete-button {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.1rem;
+    font-weight: bolder;
+    background: hsl(0, 100%, 30%);
+    color: white;
+    border: thin;
+}
+
+.delete-button:hover {
+    background: hsl(0, 100%, 45%);
+}
+
+/*Styling of the forms*/
+
+#project-form {
+    height: 30vh;
+    width: 30vw;
+    left: 35vw;
+    top: 30vh;
+    position: fixed;
+    z-index: 1;
+    border: solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: hsla(0, 0%, 100%, 1);
+}
+
+#todo-form {
+    height: 50vh;
+    width: 40vw;
+    left: 35vw;
+    top: 30vh;
+    position: fixed;
+    z-index: 1;
+    border: solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: hsla(0, 0%, 100%, 1);
+}
+
+/* Responsive design */
+
+@media screen and (min-width: 901px) and (max-width: 1400px) {
+    .project-sidebar {
+        padding-left: 2rem;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    #content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #sidebar {
+        height: 25vh;
+        width: 100vw;
+        border-bottom: groove thin;
+        border-right: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #f2f2f2;
+        overflow: hidden;
+    }
+
+    #sidebar-top-wrapper {
+        display: flex;
+        width: 80vw;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #projects-list {
+        width: 100vw;
+        display: inline-block;
+        overflow-x: scroll;
+        white-space: nowrap;
+    }
+
+    .project-sidebar {
+        font-size: 1rem;
+    }
+
+    #project-full {
+        padding: 1rem 1rem 1rem 1.7rem;
+        height: 60vh;
+        width: 90vw;
+        font-size: 0.75rem;
+    }
+
+    .todo-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-areas:
+            'expand delete'
+            'edit edit'
+            'check check';
+    }
+
+    .expand-todo {
+        grid-area: expand;
+    }
+
+    .edit-todo {
+        grid-area: edit;
+    }
+
+    .check-todo {
+        grid-area: check;
+    }
+
+    .delete-todo {
+        grid-area: delete;
+    }
+
+    #new-todo,
+    .edit-button,
+    .check-todo {
+        height: 1rem;
+        font-size: 0.5rem;
+    }
+
+    .expand-todo,
+    .delete-todo {
+        height: 1rem;
+        width: 2rem;
+        font-size: 0.5rem;
+    }
+
+    #project-buttons {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #delete-project {
+        height: 1rem;
+        width: 4rem;
+        font-size: 0.5rem;
+    }
+
+    #project-form,
+    #todo-form {
+        width: 100vw;
+        left: 0;
+        right: 0;
+        border: thin;
+    }
+}
+
+@media screen and (max-width: 476px) {
+    #project-full {
+        width: 85vw;
+    }
 }

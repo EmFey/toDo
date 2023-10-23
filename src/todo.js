@@ -17,4 +17,4 @@ const createTodo = (title, description, dueDate, priority) => {
     };
 };
 
-export { createTodo };
+export { createTodo as toDo };

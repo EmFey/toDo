@@ -8,13 +8,11 @@ import {
 } from './loadPage';
 
 import { createProject, deleteProject } from './logic';
-import { toDo, toggleStatus } from './todo';
+import { createTodo } from './todo';
 import { showProjectForm, updateProjectName } from './loadProject';
 import {
     showToDoForm,
     renderToDo,
-    expandToDo,
-    editToDo,
     toggleTodoStatusClass,
 } from './loadTodo';
 
@@ -22,7 +20,7 @@ import { saveProjects, getProjects } from './storage';
 
 const content = document.querySelector('#content');
 const sidebar = document.querySelector('#sidebar');
-let projectsList = getProjects('projectsList', [], Project('My first project'));
+let projectsList = getProjects('projectsList', [], createProject('My first project'));
 
 function renderTodosList(projectIndex) {
     const todosList = document.querySelector('#todos-list');
@@ -48,7 +46,7 @@ function handleSidebarClick(click) {
             submission.preventDefault();
             removeForm(content, form);
 
-            const newProject = Project(form.elements.namedItem('project-title').value);
+            const newProject = createProject(form.elements.namedItem('project-title').value);
             projectsList.push(newProject);
 
             renderSidebar(newProject.name, projectsList.indexOf(newProject));
@@ -77,7 +75,7 @@ function handleContentClick(button) {
             submission.preventDefault();
             removeForm(content, form);
 
-            const newToDo = toDo(
+            const newToDo = createTodo(
                 form.elements.namedItem('todo-title').value,
                 form.elements.namedItem('description').value,
                 form.elements.namedItem('date').value,

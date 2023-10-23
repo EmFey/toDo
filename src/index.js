@@ -7,7 +7,7 @@ import {
     enableButtons,
 } from './loadPage';
 
-import { Project, deleteToDo, deleteProject } from './logic';
+import { createProject, deleteProject } from './logic';
 import { toDo, toggleStatus } from './todo';
 import { showProjectForm, updateProjectName } from './loadProject';
 import {

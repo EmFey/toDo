@@ -86,19 +86,16 @@ const renderMain = (content, projectTitle, index) => {
     content.appendChild(projectMainDOM)
 }
 
-// Function to remove form when it is submitted or canceled
 const removeForm = (content, form) => {
     content.removeChild(form)
 }
 
-// Function to disable all buttons on page
 const disableButtons = (buttons) => {
     buttons.forEach((button) => {
         button.setAttribute('disabled', '')
     })
 }
 
-// Functon to enable all buttons on page
 const enableButtons = (buttons) => {
     buttons.forEach((button) => {
         button.removeAttribute('disabled')

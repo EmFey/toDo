@@ -1,46 +1,48 @@
 /**
- * Check if local storage is available in the current environment.
- * @param {string} type - The storage type to check (e.g., 'localStorage').
- * @returns {boolean} - True if storage is available, false otherwise.
+ * Check if local storage is available.
+ * This function is adapted from the MDN Web Docs.
  */
-function isStorageAvailable(type) {
+function isLocalStorageAvailable() {
     try {
-        const storage = window[type];
-        const testKey = '__storage_test__';
-        storage.setItem(testKey, testKey);
-        storage.removeItem(testKey);
-        return true;
+      const storage = window.localStorage;
+      const testKey = '__storage_test__';
+      storage.setItem(testKey, testKey);
+      storage.removeItem(testKey);
+      return true;
     } catch (e) {
-        return false;
+      return false;
     }
-}
-
-/**
- * Save an item to local storage (if available).
- * @param {string} key - The key under which the item will be saved.
- * @param {any} value - The value to save in local storage.
- */
-function saveToLocalStorage(key, value) {
-    if (isStorageAvailable('localStorage')) {
-        localStorage.setItem(key, JSON.stringify(value));
+  }
+  
+  /**
+   * Save an item in local storage if available.
+   * @param {string} key - The name of the storage item.
+   * @param {any} value - The value to save.
+   */
+  function saveToLocalStorage(key, value) {
+    if (isLocalStorageAvailable()) {
+      localStorage.setItem(key, JSON.stringify(value));
     }
-}
+  }
 
-/**
- * Retrieve data from local storage or use a default value if storage is not available or empty.
- * @param {string} key - The key to retrieve data.
- * @param {any} defaultValue - The default value to use if storage is not available or empty.
- * @returns {any} - The retrieved or default value.
- */
-function retrieveFromLocalStorage(key, defaultValue) {
-    if (isStorageAvailable('localStorage')) {
-        const storedData = JSON.parse(localStorage.getItem(key));
-        if (storedData !== null) {
-            return storedData;
+  /**
+   * Get an item from local storage if available, or use a default value.
+   * @param {string} key - The name of the storage item.
+   * @param {any} defaultValue - The default value if the item is not found.
+   * @returns {any} - The retrieved item or the default value.
+   */
+  function getFromLocalStorage(key, defaultValue) {
+    if (isLocalStorageAvailable()) {
+      const storedItem = localStorage.getItem(key);
+      if (storedItem) {
+        try {
+          return JSON.parse(storedItem);
+        } catch (error) {
+          console.error('Error parsing stored item:', error);
         }
+      }
     }
-
     return defaultValue;
-}
+  }
 
-export { saveToLocalStorage, retrieveFromLocalStorage };
+export { saveToLocalStorage, getFromLocalStorage };

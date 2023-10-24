@@ -1,15 +1,26 @@
-const createProject = (name) => {
-    const todos = [];
+class Project {
+    constructor(name) {
+      this.name = name;
+      this.todos = [];
+    }
 
-    return { name, todos };
-}
+    addTodo(todo) {
+      this.todos.push(todo);
+    }
 
-const deleteTodo = (todosArray, removedTodoIndex) => {
-    todosArray.splice(removedTodoIndex, 1);
-}
+    deleteTodo(todo) {
+      const index = this.todos.indexOf(todo);
+      if (index !== -1) {
+        this.todos.splice(index, 1);
+      }
+    }
+  }
 
-const deleteProject = (projectsList, deletedProjectIndex) => {
-    projectsList.splice(deletedProjectIndex, 1);
-}
+  function deleteProject(projectsList, project) {
+    const index = projectsList.indexOf(project);
+    if (index !== -1) {
+      projectsList.splice(index, 1);
+    }
+  }
 
-export { createProject, deleteTodo, deleteProject };
+export { Project, deleteProject };

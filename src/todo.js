@@ -1,11 +1,15 @@
-const createTodo = (title, description, dueDate, priority) => {
-    const status = false;
-
-    const toggleStatus = () => {
-        return !status;
+class ToDo {
+    constructor(title, description, dueDate, priority) {
+      this.title = title;
+      this.description = description;
+      this.dueDate = dueDate;
+      this.priority = priority;
+      this.status = false;
     }
 
-    return { title, description, dueDate, priority, status, toggleStatus };
-}
+    toggleStatus() {
+      this.status = !this.status;
+    }
+  }
 
-export { createTodo };
+export default ToDo;

@@ -1,54 +1,63 @@
-const createFormElement = (elementType, attributes = {}) => {
-    const element = document.createElement(elementType);
-
-    for (const [key, value] of Object.entries(attributes)) {
-        element.setAttribute(key, value);
-    }
-
-    return element;
-};
-
-const showProjectForm = (content, action, existingValue) => {
-    const projectForm = createFormElement('form', { id: 'project-form' });
-
-    const formTitle = createFormElement('h3');
-    formTitle.textContent = `${action} Project`;
+const createProjectForm = (content, action, existingValue) => {
+    const projectForm = document.createElement('form');
+    projectForm.id = 'project-form';
+  
+    const formTitle = document.createElement('h3');
+    formTitle.innerHTML = `${action} Project`;
     projectForm.appendChild(formTitle);
-
-    const projectTitleLabel = createFormElement('label', {
-        for: 'project-title',
-        textContent: 'Project Title',
-    });
+  
+    const projectTitleLabel = createFormLabel('Project Title', 'project-title');
     projectForm.appendChild(projectTitleLabel);
-
-    const projectTitleInput = createFormElement('input', {
-        name: 'project-title',
-        type: 'text',
-        placeholder: 'Project Title',
-        required: '',
-        value: existingValue || '',
-    });
+  
+    const projectTitleInput = createFormInput(
+      'project-title',
+      'text',
+      'Project Title',
+      'required',
+      existingValue
+    );
     projectForm.appendChild(projectTitleInput);
-
-    const submit = createFormElement('button', {
-        type: 'submit',
-        id: 'submit-project',
-        textContent: `${action} Project`,
-    });
+  
+    const submit = createFormButton(`${action} Project`, 'submit-project');
+    const cancel = createFormButton('Cancel', 'cancel-project', 'button');
+  
     projectForm.appendChild(submit);
-
-    const cancel = createFormElement('button', {
-        type: 'button',
-        id: 'cancel-project',
-        textContent: 'Cancel',
-    });
     projectForm.appendChild(cancel);
-
+  
     content.appendChild(projectForm);
-};
+  };
+  
+  const createFormLabel = (text, htmlFor) => {
+    const label = document.createElement('label');
+    label.setAttribute('for', htmlFor);
+    label.innerHTML = text;
+    return label;
+  };
+  
+  const createFormInput = (name, type, placeholder, required, value) => {
+    const input = document.createElement('input');
+    input.setAttribute('name', name);
+    input.setAttribute('type', type);
+    input.setAttribute('placeholder', placeholder);
+    if (required) {
+      input.setAttribute('required', '');
+    }
+    if (value) {
+      input.setAttribute('value', value);
+    }
+    return input;
+  };
+  
+  const createFormButton = (text, id, type = 'submit') => {
+    const button = document.createElement('button');
+    button.setAttribute('type', type);
+    button.id = id;
+    button.innerHTML = text;
+    return button;
+  };
+  
+  const updateProjectName = (projectNameDOM, projectName) => {
+    projectNameDOM.innerHTML = projectName;
+  };
 
-const updateProjectName = (projectNameDOM, projectName) => {
-    projectNameDOM.textContent = projectName;
-};
-
-export { showProjectForm, updateProjectName };
+export { createProjectForm, updateProjectName };

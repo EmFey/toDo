@@ -1,106 +1,113 @@
-const renderPage = (() => {
-    const content = document.querySelector('#content')
+// DOM Elements
+const content = document.querySelector('#content');
+const sidebar = document.createElement('section');
+sidebar.id = 'sidebar';
+const sidebarTopWrapper = document.createElement('div');
+sidebarTopWrapper.id = 'sidebar-top-wrapper';
+const sidebarTitle = document.createElement('h2');
+sidebarTitle.innerHTML = 'Projects';
+const newProject = document.createElement('button');
+newProject.innerHTML = 'New Project';
+newProject.id = 'new-project';
+const sidebarListOfProjects = document.createElement('section');
+sidebarListOfProjects.id = 'projects-list';
 
-    const sidebar = document.createElement('section')
-    sidebar.id = 'sidebar'
-
-    const sidebarTopWrapper = document.createElement('div')
-    sidebarTopWrapper.id = 'sidebar-top-wrapper'
-
-    const sidebarTitle = document.createElement('h2')
-    sidebarTitle.innerHTML = 'Projects'
-    sidebarTopWrapper.appendChild(sidebarTitle)
-
-    const newProject = document.createElement('button')
-    newProject.innerHTML = 'New Project'
-    newProject.id = 'new-project'
-    sidebarTopWrapper.appendChild(newProject)
-
-    const sidebarListOfProjects = document.createElement('section')
-    sidebarListOfProjects.id = 'projects-list'
-
-    sidebar.appendChild(sidebarTopWrapper)
-    sidebar.appendChild(sidebarListOfProjects)
-    content.appendChild(sidebar)
-})()
-
+// Render Sidebar
 const renderSidebar = (projectName, index) => {
-    const sidebarListOfProjects = document.querySelector('#projects-list')
+    const projectSide = document.createElement('button');
+    projectSide.dataset.index = index;
+    projectSide.classList.add('project-sidebar');
+    projectSide.innerHTML = projectName;
+    sidebarListOfProjects.appendChild(projectSide);
+};
 
-    const projectSide = document.createElement('button')
-    projectSide.dataset.index = index
-    projectSide.classList.add('project-sidebar')
-    projectSide.innerHTML = projectName
-
-    sidebarListOfProjects.appendChild(projectSide)
-}
-
-const renderMain = (content, projectTitle, index) => {
-
-    if (document.querySelector('#project-full')) {
-        content.removeChild(document.querySelector('#project-full'))
+// Render Main Content
+const renderMain = (projectTitle, index) => {
+    // Remove existing project content if any
+    const existingProject = document.querySelector('#project-full');
+    if (existingProject) {
+        content.removeChild(existingProject);
     }
 
-    const projectMainDOM = document.createElement('section')
-    projectMainDOM.id = 'project-full'
-    projectMainDOM.dataset.index = index
+    // Create new project content
+    const projectMainDOM = document.createElement('section');
+    projectMainDOM.id = 'project-full';
+    projectMainDOM.dataset.index = index;
 
-    const projectTopRow = document.createElement('div')
-    projectTopRow.id = 'project-top-row'
+    const projectTopRow = document.createElement('div');
+    projectTopRow.id = 'project-top-row';
 
-    const projectTitleDOM = document.createElement('h2')
-    projectTitleDOM.innerHTML = projectTitle
-    projectTopRow.appendChild(projectTitleDOM)
+    const projectTitleDOM = document.createElement('h2');
+    projectTitleDOM.innerHTML = projectTitle;
+    projectTopRow.appendChild(projectTitleDOM);
 
-    const projectButtonWrapper = document.createElement('div')
-    projectButtonWrapper.id = 'project-buttons'
+    const projectButtonWrapper = document.createElement('div');
+    projectButtonWrapper.id = 'project-buttons';
 
-    const newToDo = document.createElement('button')
-    newToDo.innerHTML = 'New Task'
-    newToDo.id = 'new-todo'
-    newToDo.setAttribute('title', 'New task')
-    projectButtonWrapper.appendChild(newToDo)
+    // Create "New Task" button
+    const newToDo = createButton('New Task', 'new-todo', 'New task');
 
-    const editProjectButton = document.createElement('button')
-    editProjectButton.id = 'edit-project'
-    editProjectButton.classList.add('edit-button')
-    editProjectButton.setAttribute('title', 'Edit Project')
-    editProjectButton.innerHTML = 'Edit Project'
-    projectButtonWrapper.appendChild(editProjectButton)
+    // Create "Edit Project" button
+    const editProjectButton = createButton('Edit Project', 'edit-project', 'Edit Project', 'edit-button');
 
-    const deleteProjectButton = document.createElement('button')
-    deleteProjectButton.id = 'delete-project'
-    deleteProjectButton.classList.add('delete-button')
-    deleteProjectButton.setAttribute('title', 'Delete Project')
-    deleteProjectButton.innerHTML = 'X'
-    projectButtonWrapper.appendChild(deleteProjectButton)
+    // Create "Delete Project" button
+    const deleteProjectButton = createButton('X', 'delete-project', 'Delete Project', 'delete-button');
 
-    projectTopRow.appendChild(projectButtonWrapper)
+    // Append buttons to the button wrapper
+    projectButtonWrapper.appendChild(newToDo);
+    projectButtonWrapper.appendChild(editProjectButton);
+    projectButtonWrapper.appendChild(deleteProjectButton);
 
-    projectMainDOM.appendChild(projectTopRow)
+    // Append button wrapper to the project top row
+    projectTopRow.appendChild(projectButtonWrapper);
+    projectMainDOM.appendChild(projectTopRow);
 
-    const toDosDOM = document.createElement('section')
-    toDosDOM.id = 'todos-list'
-    projectMainDOM.appendChild(toDosDOM)
+    // Create "To-Dos" section
+    const toDosDOM = document.createElement('section');
+    toDosDOM.id = 'todos-list';
+    projectMainDOM.appendChild(toDosDOM);
 
-    content.appendChild(projectMainDOM)
+    // Append the new project content to the page
+    content.appendChild(projectMainDOM);
+};
+
+// Create a button element
+function createButton(text, id, title, className) {
+    const button = document.createElement('button');
+    button.innerHTML = text;
+    button.id = id;
+    if (title) button.setAttribute('title', title);
+    if (className) button.classList.add(className);
+    return button;
 }
 
-const removeForm = (content, form) => {
-    content.removeChild(form)
-}
+// Function to remove a form element
+const removeForm = (form) => {
+    form.remove();
+};
 
+// Function to disable buttons
 const disableButtons = (buttons) => {
     buttons.forEach((button) => {
-        button.setAttribute('disabled', '')
-    })
-}
+        button.setAttribute('disabled', '');
+    });
+};
 
+// Function to enable buttons
 const enableButtons = (buttons) => {
     buttons.forEach((button) => {
-        button.removeAttribute('disabled')
-    })
-}
+        button.removeAttribute('disabled');
+    });
+};
+
+// Initial page rendering
+const renderPage = (() => {
+    sidebarTopWrapper.appendChild(sidebarTitle);
+    sidebarTopWrapper.appendChild(newProject);
+    sidebar.appendChild(sidebarTopWrapper);
+    sidebar.appendChild(sidebarListOfProjects);
+    content.appendChild(sidebar);
+})();
 
 export {
     renderPage,
@@ -109,4 +116,4 @@ export {
     removeForm,
     disableButtons,
     enableButtons,
-}
+};

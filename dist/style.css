@@ -1,10 +1,12 @@
+/* Reset default margin, padding, and font for consistency */
 html, body {
     margin: 0;
     padding: 0;
-    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: 20px;
 }
 
+/* Sidebar styles */
 #content {
     display: flex;
 }
@@ -38,7 +40,7 @@ html, body {
     background: hsl(140, 100%, 45%);
 }
 
-/*Styling for list of projects in the sidebar*/
+/* Styling for list of projects in the sidebar */
 #projects-list {
     width: 20vw;
     margin-top: 1rem;
@@ -46,7 +48,7 @@ html, body {
     flex-direction: column;
 }
 
-/*Styling for the buttons in the sidebar*/
+/* Sidebar buttons */
 .project-sidebar {
     height: 2rem;
     color: black;
@@ -61,6 +63,7 @@ html, body {
     background: #d6d6c2;
 }
 
+/* Main content area styles */
 #project-full {
     padding: 0rem 1.5rem;
     height: 93vh;
@@ -69,15 +72,10 @@ html, body {
     overflow-x: hidden;
 }
 
-#project-top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
+/* Todo item styles */
 .todo {
     border: solid thin;
-    padding: 0rem 0.3rem;
+    padding: 10px;
 }
 
 .todo-top-row {
@@ -96,7 +94,7 @@ html, body {
 
 .todo-completed {
     text-decoration: line-through;
-    color: hsl(0, 0%, 30%);
+    color: #4d4d4d;
 }
 
 .high-priority {
@@ -111,70 +109,70 @@ html, body {
     background: #66ff66;
 }
 
-#new-todo {
-    height: 2rem;
-    font-size: 1.1rem;
+#new-todo, .edit-button, .check-todo {
+    height: 10px;
+    font-size: 10px;
     font-weight: bolder;
-    background: hsl(140, 100%, 30%);
+    background: #009933;
     color: white;
     border: thin;
 }
 
-#new-todo:hover {
-    background: hsl(140, 100%, 45%);
+#new-todo:hover, .edit-button:hover, .check-todo:hover {
+    background: #00e64d;
 }
 
-.expand-todo,
-.edit-button,
-.check-todo {
-    height: 2rem;
-    font-size: 1.1rem;
+/* Expand, Edit, and Check buttons */
+.expand-todo, .edit-button, .check-todo {
+    height: 10px;
+    font-size: 10px;
     font-weight: bolder;
     color: white;
     border: thin;
 }
 
 .expand-todo {
-    background: hsl(210, 100%, 60%);
+    background: #3399ff;
     width: 2rem;
 }
 
 .expand-todo:hover {
-    background: hsl(210, 100%, 75%);
+    background: #80bfff;
 }
+
 .edit-button {
-    background: hsl(60, 19%, 25%);
+    background: #4c4c34;
 }
 
 .edit-button:hover {
-    background: hsl(60, 19%, 40%);
+    background: #797953;
 }
 
 .check-todo {
-    background: hsl(260, 100%, 70%);
+    background: #9966ff;
 }
 
 .check-todo:hover {
-    background: hsl(260, 100%, 85%);
+    background: #ccb3ff;
 }
 
+/* Delete button */
 .delete-button {
-    width: 2rem;
-    height: 2rem;
-    font-size: 1.1rem;
+    width: 10px;
+    height: 20px;
+    font-size: 10px;
     font-weight: bolder;
-    background: hsl(0, 100%, 30%);
+    background: #990000;
     color: white;
     border: thin;
 }
 
 .delete-button:hover {
-    background: hsl(0, 100%, 45%);
+    background: #e60000;
 }
 
-/*Styling of the forms*/
-
-#project-form {
+/* Forms */
+#project-form, #todo-form {
     height: 30vh;
     width: 30vw;
     left: 35vw;
@@ -188,22 +186,7 @@ html, body {
     background: hsla(0, 0%, 100%, 1);
 }
 
-#todo-form {
-    height: 50vh;
-    width: 40vw;
-    left: 35vw;
-    top: 30vh;
-    position: fixed;
-    z-index: 1;
-    border: solid;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: hsla(0, 0%, 100%, 1);
-}
-
 /* Responsive design */
-
 @media screen and (min-width: 901px) and (max-width: 1400px) {
     .project-sidebar {
         padding-left: 2rem;
@@ -257,10 +240,7 @@ html, body {
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr 1fr;
-        grid-template-areas:
-            'expand delete'
-            'edit edit'
-            'check check';
+        grid-template-areas: 'expand delete' 'edit edit' 'check check';
     }
 
     .expand-todo {
@@ -279,15 +259,12 @@ html, body {
         grid-area: delete;
     }
 
-    #new-todo,
-    .edit-button,
-    .check-todo {
+    #new-todo, .edit-button, .check-todo {
         height: 1rem;
         font-size: 0.5rem;
     }
 
-    .expand-todo,
-    .delete-todo {
+    .expand-todo, .delete-todo {
         height: 1rem;
         width: 2rem;
         font-size: 0.5rem;
@@ -304,8 +281,7 @@ html, body {
         font-size: 0.5rem;
     }
 
-    #project-form,
-    #todo-form {
+    #project-form, #todo-form {
         width: 100vw;
         left: 0;
         right: 0;

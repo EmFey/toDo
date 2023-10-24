@@ -16,32 +16,31 @@ function isStorageAvailable(type) {
 }
 
 /**
- * Save a project item to local storage (if available).
- * @param {string} itemName - The name of the item to save.
- * @param {any} itemValue - The value to save in local storage.
+ * Save an item to local storage (if available).
+ * @param {string} key - The key under which the item will be saved.
+ * @param {any} value - The value to save in local storage.
  */
-function saveProject(itemName, itemValue) {
+function saveToLocalStorage(key, value) {
     if (isStorageAvailable('localStorage')) {
-        localStorage.setItem(itemName, JSON.stringify(itemValue));
+        localStorage.setItem(key, JSON.stringify(value));
     }
 }
 
 /**
- * Retrieve projects from local storage, or use a default value if storage is not available or empty.
- * @param {string} itemName - The name of the item to retrieve.
+ * Retrieve data from local storage or use a default value if storage is not available or empty.
+ * @param {string} key - The key to retrieve data.
  * @param {any} defaultValue - The default value to use if storage is not available or empty.
  * @returns {any} - The retrieved or default value.
  */
-function getProjects(itemName, defaultValue) {
+function retrieveFromLocalStorage(key, defaultValue) {
     if (isStorageAvailable('localStorage')) {
-        const storedData = JSON.parse(localStorage.getItem(itemName));
-
-        if (Array.isArray(storedData) && storedData.length > 0) {
+        const storedData = JSON.parse(localStorage.getItem(key));
+        if (storedData !== null) {
             return storedData;
         }
     }
 
-    return [defaultValue];
+    return defaultValue;
 }
 
-export { saveProject as saveProjects, getProjects };
+export { saveToLocalStorage as saveToLocalStorage, retrieveFromLocalStorage as retrieveFromLocalStorage };

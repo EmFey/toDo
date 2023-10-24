@@ -1,20 +1,11 @@
 const createTodo = (title, description, dueDate, priority) => {
-    let completed = false;
+    const status = false;
 
     const toggleStatus = () => {
-        completed = !completed;
-    };
+        return !status;
+    }
 
-    return {
-        title,
-        description,
-        dueDate,
-        priority,
-        get completed() {
-            return completed;
-        },
-        toggleStatus,
-    };
-};
+    return { title, description, dueDate, priority, status, toggleStatus };
+}
 
-export { createTodo as toDo };
+export { createTodo };

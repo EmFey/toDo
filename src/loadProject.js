@@ -1,8 +1,10 @@
-const createFormElement = (tagName, attributes = {}) => {
-    const element = document.createElement(tagName);
+const createFormElement = (elementType, attributes = {}) => {
+    const element = document.createElement(elementType);
+
     for (const [key, value] of Object.entries(attributes)) {
         element.setAttribute(key, value);
     }
+
     return element;
 };
 

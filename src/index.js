@@ -5,18 +5,18 @@ import {
     removeForm,
     disableButtons,
     enableButtons,
-  } from './render-page';
-  import { Project, deleteToDo, deleteProject } from './project-logic';
+  } from './loadPage';
+  import { Project, deleteToDo, deleteProject } from './logic';
   import { toDo, toggleStatus } from './todo-logic';
-  import { showProjectForm, updateProjectName } from './render-project';
+  import { showProjectForm, updateProjectName } from './loadProject';
   import {
     showToDoForm,
     renderToDo,
     expandToDo,
     editToDo,
     toggleTodoStatusClass,
-  } from './render-todo';
-  import { saveProjects, getProjects } from './storage-functions';
+  } from './loadTodo';
+  import { saveProjects, getProjects } from './storage';
   
   const PageController = (() => {
     const content = document.querySelector('#content');

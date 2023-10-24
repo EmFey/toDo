@@ -16,7 +16,7 @@ import {
     editToDo,
     toggleTodoStatusClass,
 } from './loadTodo';
-import { saveProjects, getProjects } from './storage';
+import { saveToLocalStorage, retrieveFromLocalStorage } from './storage';
 
 const PageController = (() => {
     const content = document.querySelector('#content');
@@ -25,7 +25,7 @@ const PageController = (() => {
 
     const initializePage = () => {
         // Initialize the page with projects and todos
-        projectsList = getProjects(
+        projectsList = retrieveFromLocalStorage(
             'projectsList',
             projectsList,
             createProject('My first project')
@@ -95,7 +95,7 @@ const PageController = (() => {
             renderProjectAndTodos(projectsList.indexOf(newProject));
 
             // Save the project to localStorage
-            saveProjects('projectsList', projectsList);
+            saveToLocalStorage('projectsList', projectsList);
 
             // Re-enable buttons
             enableButtons(buttons);

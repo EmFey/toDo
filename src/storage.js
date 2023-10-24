@@ -43,4 +43,4 @@ function retrieveFromLocalStorage(key, defaultValue) {
     return defaultValue;
 }
 
-export { saveToLocalStorage as saveToLocalStorage, retrieveFromLocalStorage as retrieveFromLocalStorage };
+export { saveToLocalStorage, retrieveFromLocalStorage };

@@ -1,5 +1,5 @@
 # toDo
-Making a task manager project...
+Now you can organize your life with this app that I built.
 
 
 ## Acknowledgements
@@ -21,7 +21,7 @@ This project is not done yet, no project is ever done, wink
 
 ## Lessons Learned
 
-Wepack, I know enough to build this
+Using modules to separate code
 
 ## LIVE
-Link coming
+https://emfey.github.io/toDo/

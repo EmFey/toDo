@@ -1,49 +1,50 @@
 import ItemModel from "./loadTodo";
-import DisplayController from "./loadPage";
 import ProjectModel from "./loadProject";
 
 class Projects {
     constructor() {
+        this.loadProjects();
+    }
+
+    loadProjects() {
         this.projects = JSON.parse(localStorage.getItem('projects')) || [];
+    }
+
+    saveProjects() {
+        localStorage.setItem("projects", JSON.stringify(this.projects));
     }
 
     createProject(title) {
         const newProject = new ProjectModel(title);
         this.projects.push(newProject);
-        localStorage.setItem("projects", JSON.stringify(this.projects));
+        this.saveProjects();
     }
 
     removeProject(projId) {
-        let workingProj = this.projects.find(p => p.id === projId);
-        this.projects = this.projects.filter(proj => proj.id != workingProj.id);
-        localStorage.setItem("projects", JSON.stringify(this.projects));
+        this.projects = this.projects.filter(proj => proj.id !== projId);
+        this.saveProjects();
     }
 
     addItem(title, dueDate, description, priority, completionStatus, projId) {
-        let newItem = new ItemModel(title, dueDate, description, priority, completionStatus);
-        this.projects.find(p => p.id === projId).todos.push(newItem);
-        localStorage.setItem("projects", JSON.stringify(this.projects));
+        const newItem = new ItemModel(title, dueDate, description, priority, completionStatus);
+        const project = this.projects.find(p => p.id === projId);
+        project.todos.push(newItem);
+        this.saveProjects();
     }
 
     editItem(title, dueDate, description, priority, completionStatus, projId, itemId) {
-        let workingProj = this.projects.find(p => p.id === projId);
-        let workingItem = workingProj.todos.find(i => i.id === itemId);
+        const project = this.projects.find(p => p.id === projId);
+        const item = project.todos.find(i => i.id === itemId);
 
-        workingItem.title = title;
-        workingItem.dueDate = dueDate;
-        workingItem.description = description;
-        workingItem.priority = priority;
-        workingItem.completionStatus = completionStatus;
-        localStorage.setItem("projects", JSON.stringify(this.projects));
+        Object.assign(item, { title, dueDate, description, priority, completionStatus });
+        this.saveProjects();
     }
 
     removeItem(projId, itemId) {
-        let workingProj = this.projects.find(p => p.id === projId);
-        let workingItem = workingProj.todos.find(i => i.id === itemId);
-        workingProj.todos = workingProj.todos.filter(todo => todo.id != workingItem.id);
-        localStorage.setItem("projects", JSON.stringify(this.projects));
+        const project = this.projects.find(p => p.id === projId);
+        project.todos = project.todos.filter(todo => todo.id !== itemId);
+        this.saveProjects();
     }
 }
-
 
 export default Projects;

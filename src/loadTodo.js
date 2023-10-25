@@ -1,14 +1,10 @@
 const { v4: uuidv4 } = require('uuid');
 
 class ItemModel {
-    constructor(title, dueDate, description, priority, completionStatus=false) {
-        this.title = title;
-        this.dueDate = dueDate;
-        this.description = description;
-        this.priority = priority;
-        this.completionStatus = completionStatus;
+    constructor(title, dueDate, description, priority, completionStatus = false) {
         this.id = uuidv4();
+        Object.assign(this, { title, dueDate, description, priority, completionStatus });
     }
 }
 
-export default ItemModel
+export default ItemModel;

@@ -3,15 +3,11 @@ import { format } from 'date-fns';
 
 class DisplayController {
     constructor() {
-        // Grabbing the hard coded app div
         this.appDiv = document.getElementById("app");
-
         this.projectsModel = new Projects();
 
-        this.containerDiv = document.createElement("div");
-        this.containerDiv.id = "container";
-        this.contentDiv = document.createElement("div");
-        this.contentDiv.id = "content";
+        this.containerDiv = this.createElement("div", "container");
+        this.contentDiv = this.createElement("div", "content");
         this.appDiv.appendChild(this.containerDiv);
 
         this.createSidebar();
@@ -20,50 +16,58 @@ class DisplayController {
         console.log(this.projectsModel);
     }
 
-    createSidebar() {
-        this.sidebarDiv = document.createElement("div");
-        this.logoDiv = document.createElement("div");
-        this.logoImage = document.createElement("i");
-        this.logoHR = document.createElement("hr");
-        this.addProjectBtn = document.createElement("BUTTON");
-        this.addProjectIco = document.createElement("i");
-        this.sidebarHR = document.createElement("hr");
-        this.sidebarContainerDiv = document.createElement("div");
-        this.userProjectsUl = document.createElement("ul");
+    createElement(tagName, id) {
+        const element = document.createElement(tagName);
+        if (id) element.id = id;
+        return element;
+    }
 
-        this.sidebarDiv.id = "sidebar";
-        this.logoDiv.classList.add("logo");
+    createButton(text, classNames, clickHandler) {
+        const button = this.createElement("button");
+        button.textContent = text;
+        button.classList.add(...classNames);
+        button.addEventListener("click", clickHandler);
+        return button;
+    }
+
+    createSidebar() {
+        this.sidebarDiv = this.createElement("div", "sidebar");
+        this.logoDiv = this.createElement("div", "logo");
+        this.logoImage = this.createElement("i");
+        this.logoHR = this.createElement("hr");
+        this.addProjectBtn = this.createButton("Add Project", ["add-project-btn"], () => this.handleAddProjectBtnClick());
+        this.sidebarHR = this.createElement("hr", "sidebar-container-hr");
+        this.sidebarContainerDiv = this.createElement("div", "sidebar-container");
+        this.userProjectsUl = this.createElement("ul", "user-projects");
+
         this.logoImage.classList.add("logo-icon", "fas", "fa-th-list", "fa-2x");
         this.logoImage.textContent = "TODO LIST";
-        this.addProjectBtn.classList.add("add-project-btn");
-        this.addProjectBtn.textContent = "Add Project";
-        this.addProjectIco.classList.add("fas", "fa-plus", "project-btn");
-        this.sidebarHR.classList.add("sidebar-container-hr");
-        this.sidebarContainerDiv.id = "sidebar-container";
-        this.userProjectsUl.classList.add("user-projects");
 
         this.containerDiv.appendChild(this.sidebarDiv);
         this.sidebarDiv.appendChild(this.logoDiv);
         this.logoDiv.appendChild(this.logoImage);
         this.logoDiv.appendChild(this.logoHR);
         this.sidebarContainerDiv.appendChild(this.addProjectBtn);
-        this.addProjectBtn.appendChild(this.addProjectIco);
         this.sidebarDiv.appendChild(this.sidebarContainerDiv);
         this.sidebarContainerDiv.appendChild(this.userProjectsUl);
 
-        let projectList = JSON.parse(localStorage.getItem('projects'));
-        this.renderProjectList(projectList);
+        this.renderProjectList(JSON.parse(localStorage.getItem('projects')));
 
-        this.addProjectBtn.addEventListener("click", () => {
-            let eventProjCont = new Projects();
-            let projTitle = prompt("Project Title: ");
-            eventProjCont.createProject(projTitle);
-            let updatedProjects = JSON.parse(localStorage.getItem('projects'));
-            this.renderProject(updatedProjects[updatedProjects.length-1].id);
+        this.handleProjectClickEvents();
+    }
+
+    handleAddProjectBtnClick() {
+        const projectTitle = prompt("Project Title: ");
+        if (projectTitle) {
+            this.projectsModel.createProject(projectTitle);
+            const updatedProjects = JSON.parse(localStorage.getItem('projects'));
+            this.renderProject(updatedProjects[updatedProjects.length - 1].id);
             this.clearChildNodes("sidebar");
-        });
+        }
+    }
 
-        let userProjects =  document.querySelectorAll(".project")
+    handleProjectClickEvents() {
+        const userProjects = document.querySelectorAll(".project");
 
         userProjects.forEach(project => {
             project.addEventListener("click", event => {
@@ -78,48 +82,36 @@ class DisplayController {
 
     renderProjectList(projects) {
         if (projects) {
-            for (let i = 0; i < projects.length; i++) {
-                this.projectLi = document.createElement("li");
-                this.projectLi.classList.add("project");
-                this.projectLi.setAttribute("data-id", projects[i].id);
-                this.projectLi.textContent = projects[i].title;
-                this.userProjectsUl.appendChild(this.projectLi);
-            }
+            projects.forEach(project => {
+                const projectLi = this.createElement("li", null);
+                projectLi.classList.add("project");
+                projectLi.setAttribute("data-id", project.id);
+                projectLi.textContent = project.title;
+                this.userProjectsUl.appendChild(projectLi);
+            });
         }
     }
 
     renderProject(projId) {
-        let updatedProjects = JSON.parse(localStorage.getItem('projects'));
-        let projItems = updatedProjects.find(p => p.id === projId).todos;
-        let currentProj = projId;
+        const updatedProjects = JSON.parse(localStorage.getItem('projects'));
+        const project = updatedProjects.find(p => p.id === projId);
+        const currentProj = projId;
 
         this.clearChildNodes("content");
+        this.contentContainerDiv = this.createElement("div", "content-container");
+        this.contentHeaderDiv = this.createElement("div", "content-header");
+        this.currentTitleSpan = this.createElement("span", "current-project-title");
+        this.projectSettingsDiv = this.createElement("div", "settings-icon");
+        this.projectSettingsIcon = this.createElement("i");
+        this.contentBodyDiv = this.createElement("div", "content-body");
+        this.itemDiv = this.createElement("div", "items");
+        this.addItemBtnDiv = this.createElement("div", "add-item-btn");
+        this.addItemIco = this.createElement("i", null);
+        this.addItemSpan = this.createElement("span", "add-item-text");
 
-        this.contentContainerDiv = document.createElement("div");
-        this.contentHeaderDiv = document.createElement("div");
-        this.currentTitleSpan = document.createElement("span");
-        this.projectSettingsDiv = document.createElement("div");
-        this.projectSettingsIcon = document.createElement("i");
-        this.contentBodyDiv = document.createElement("div");
-        this.itemDiv = document.createElement("div");
-        this.addItemBtnDiv = document.createElement("div");
-        this.addItemIco = document.createElement("i");
-        this.addItemSpan = document.createElement("span");
-
-        this.contentContainerDiv.id = "content-container";
-        this.contentHeaderDiv.classList.add("content-header");
-        this.currentTitleSpan.classList.add("current-project-title");
-        this.projectSettingsDiv.classList.add("settings-icon");
-        this.projectSettingsIcon.classList.add("far", "fa-trash-alt", "fa-lg");
-        this.contentBodyDiv.classList.add("content-body");
-        this.itemDiv.classList.add("items");
-        this.addItemBtnDiv.classList.add("add-item-btn");
-        this.addItemIco.classList.add("fas", "fa-plus", "item-btn");
-        this.addItemSpan.classList.add("add-item-text");
-
-        this.currentTitleSpan.innerText = updatedProjects.find(p => p.id === projId).title;
+        this.currentTitleSpan.innerText = project.title;
         this.currentTitleSpan.setAttribute("data-id", projId);
-        
+
         this.containerDiv.appendChild(this.contentDiv);
         this.contentDiv.appendChild(this.contentContainerDiv);
         this.contentContainerDiv.appendChild(this.contentHeaderDiv);
@@ -127,214 +119,113 @@ class DisplayController {
         this.projectSettingsDiv.appendChild(this.projectSettingsIcon);
         this.contentHeaderDiv.appendChild(this.projectSettingsDiv);
         this.contentContainerDiv.appendChild(this.contentBodyDiv);
-        
-        // Rendering the projects items
+
         this.renderItems(projId);
-        document.querySelectorAll(".item").forEach(item => {
-            item.addEventListener("mouseenter", () => {
-                item.querySelector(".item-options").style.display = "block";
-            });
-            item.addEventListener("mouseleave", () => {
-                item.querySelector(".item-options").style.display = "none";
-            });
-        });
-        
+
         this.contentBodyDiv.appendChild(this.addItemBtnDiv);
         this.addItemBtnDiv.appendChild(this.addItemIco);
         this.addItemSpan.innerText = "Add Item";
         this.addItemBtnDiv.appendChild(this.addItemSpan);
 
-        this.itemForm();
-
-        let deleteIcons = document.querySelectorAll(".delete-item");
-        deleteIcons.forEach(icon => {
-            icon.addEventListener("click", (event) => {
-                let workingItemId = icon.getAttribute("item-id");
-                this.projectsModel.removeItem(projId, workingItemId)
-                this.renderProject(projId);
-            });
-        });
-        this.projectSettingsDiv.addEventListener("click", () => {
-            this.projectsModel.removeProject(projId);
-            this.clearChildNodes("sidebar");
-            this.renderProject(this.projects[0].id);
-        })
-
-        this.addItemBtnDiv.addEventListener("click", () => {
-            this.newItemSubmit.removeAttribute("item-id");
-            this.formContainer.style.display = "grid";
-            this.newItemSubmit.setAttribute("btn-type", "new");
-            this.formHeaderSpan.innerText = "Add Item";
-            this.itemTitleInput.value = "";
-            this.itemDescInput.value = "";
-            this.prioritySelection.value = "";
-            this.itemDueDateInput.value = "";
-        });
-        let editIcons = document.querySelectorAll(".item-edit");
-        editIcons.forEach(icon => {
-            icon.addEventListener("click", event => {
-                let allProjects = JSON.parse(localStorage.getItem("projects"));
-                let itemId = icon.getAttribute("dataset-id");
-                this.formContainer.style.display = "grid";
-                let workingProj = allProjects.find(p => p.id === projId);
-                let workingItem = workingProj.todos.find(i => i.id === itemId);
-                this.formHeaderSpan.innerText = "Edit Item";
-                this.itemTitleInput.value = workingItem.title;
-                this.itemDescInput.value = workingItem.description;
-                this.prioritySelection.value = workingItem.priority;
-                this.itemDueDateInput.value = workingItem.dueDate;
-                this.newItemSubmit.setAttribute("btn-type", "edit");
-                this.newItemSubmit.setAttribute("item-id", itemId);
-            });
-        });
-        let completionBoxes = document.getElementsByName("item-status");
-        completionBoxes.forEach(box => {
-            let itemId = box.getAttribute("item-id");
-            let workingProj = this.projects.find(p => p.id === projId);
-            let workingItem = workingProj.todos.find(i => i.id === itemId);
-            box.addEventListener("click", () => {
-                if (box.checked === false) {
-                    workingItem.completionStatus = false;
-                    localStorage.setItem("projects", JSON.stringify(this.projects));
-                    this.clearChildNodes("items");
-                    this.renderProject(projId);
-                } else {
-                    workingItem.completionStatus = true;
-                    localStorage.setItem("projects", JSON.stringify(this.projects));
-                    this.clearChildNodes("items");
-                    this.renderProject(projId);
-                }
-            });
-        });
-        this.newItemSubmit.addEventListener("click", () => {
-            let title = this.itemTitleInput.value;
-            let dueDate = this.itemDueDateInput.value;
-            let desc = this.itemDescInput.value;
-            let prio = this.prioritySelection.value;
-            let projectId = this.currentTitleSpan.dataset.id;
-            let completionStatus = false;
-            if (this.newItemSubmit.getAttribute("btn-type") === "new") {
-                this.projectsModel.addItem(title, dueDate, desc, prio, completionStatus, projectId)
-                this.renderProject(projId);
-            } else if (this.newItemSubmit.getAttribute("btn-type") === "edit") {
-                let itemId = this.newItemSubmit.getAttribute("item-id");
-                this.projectsModel.editItem(title, dueDate, desc, prio, completionStatus, projectId, itemId);
-                this.renderProject(projId);
-            }
-        });
+        this.handleItemForm();
+        this.handleDeleteItemIcons(projId);
+        this.handleProjectSettings(projId);
+        this.handleEditItemIcons(projId);
+        this.handleCompletionBoxes(projId);
     }
 
     renderItems(projId) {
-        let updatedProjects = JSON.parse(localStorage.getItem('projects'));
-        let projItems = updatedProjects.find(p => p.id === projId).todos;
-        
+        const updatedProjects = JSON.parse(localStorage.getItem('projects'));
+        const projItems = updatedProjects.find(p => p.id === projId).todos;
+
         if (projItems.length > 0) {
             projItems.forEach(item => {
-                this.itemContainerDiv = document.createElement("div");
-                this.itemContainerDiv.classList.add("items-container");
-                this.item = document.createElement("div");
-                this.item.classList.add("item");
-                this.itemOptionsDiv = document.createElement("div");
-                this.itemOptionsDiv.classList.add("item-options");
-                this.itemOptionsDiv.style.display = "none";
-                this.itemEditIcon = document.createElement("i");
-                this.itemEditIcon.classList.add("far", "fa-edit", "item-options-icon");
-                this.itemEditSection = document.createElement("div");
-                this.itemEditSection.classList.add("item-edit");
-                this.itemEditSection.setAttribute("dataset-id", item.id);
-                this.itemDeleteSection = document.createElement("div");
-                this.itemDeleteSection.classList.add("delete-item");
-                this.itemDeleteIcon = document.createElement("i");
-                this.itemDeleteIcon.classList.add("far", "fa-trash-alt", "item-options-icon");
-                this.itemDeleteSection.setAttribute("item-id", item.id);
-                this.itemTitleDiv = document.createElement("div");
-                this.itemTitleDiv.classList.add("item-title");
-                this.itemTitleDiv.innerText = item.title;
-                this.itemTitleDiv.setAttribute("dataset-id", item.id);
-                this.itemRowBr = document.createElement("br");
-                this.dueDateDiv = document.createElement("div");
-                this.dueDateDiv.classList.add("due-date");
-                this.dueDateDiv.innerText = item.dueDate;
-                this.itemHr = document.createElement("hr");
-                this.completionBox = document.createElement("input");
-                this.completionBox.type = "checkbox";
-                this.completionBox.classList.add("item-completion-status-box");
-                this.completionBox.setAttribute("item-id", item.id);
-                this.completionBox.name = "item-status";
+                const itemContainerDiv = this.createElement("div", "items-container");
+                const item = this.createElement("div", "item");
+                const itemOptionsDiv = this.createElement("div", "item-options");
+                const itemEditIcon = this.createElement("i", "item-edit");
+                const itemDeleteSection = this.createElement("div", "delete-item");
+                const itemDeleteIcon = this.createElement("i");
+                const itemTitleDiv = this.createElement("div", "item-title");
+                const dueDateDiv = this.createElement("div", "due-date");
+                const completionBox = this.createElement("input");
+                const itemRowBr = this.createElement("br");
+                const itemHr = this.createElement("hr");
+                const priority = item.priority.toLowerCase();
 
-                this.contentBodyDiv.appendChild(this.itemContainerDiv);
-                this.itemContainerDiv.appendChild(this.item);
-                this.item.appendChild(this.itemOptionsDiv);
-                this.itemDeleteSection.appendChild(this.itemDeleteIcon);
-                this.itemEditSection.appendChild(this.itemEditIcon);
-                this.itemOptionsDiv.appendChild(this.itemEditSection);
-                this.itemOptionsDiv.appendChild(this.itemDeleteSection);
-                this.item.appendChild(this.completionBox);
-                this.item.appendChild(this.itemTitleDiv);
-                this.item.appendChild(this.itemRowBr);
-                this.item.appendChild(this.dueDateDiv);
-                this.itemContainerDiv.appendChild(this.itemHr);
+                itemOptionsDiv.style.display = "none";
 
-                if (item.completionStatus === true) {
-                    this.completionBox.checked = true;
-                    this.itemContainerDiv.classList.add("completed-item");
+                itemEditIcon.classList.add("far", "fa-edit", "item-options-icon");
+                itemEditIcon.setAttribute("dataset-id", item.id);
+
+                itemDeleteIcon.classList.add("far", "fa-trash-alt", "item-options-icon");
+                itemDeleteSection.setAttribute("item-id", item.id);
+
+                itemTitleDiv.innerText = item.title;
+                itemTitleDiv.setAttribute("dataset-id", item.id);
+
+                dueDateDiv.innerText = item.dueDate;
+
+                completionBox.type = "checkbox";
+                completionBox.classList.add("item-completion-status-box");
+                completionBox.setAttribute("item-id", item.id);
+                completionBox.name = "item-status";
+
+                this.contentBodyDiv.appendChild(itemContainerDiv);
+                itemContainerDiv.appendChild(item);
+                item.appendChild(itemOptionsDiv);
+                itemOptionsDiv.appendChild(itemEditIcon);
+                itemOptionsDiv.appendChild(itemDeleteSection);
+                item.appendChild(completionBox);
+                item.appendChild(itemTitleDiv);
+                item.appendChild(itemRowBr);
+                item.appendChild(dueDateDiv);
+                itemContainerDiv.appendChild(itemHr);
+
+                if (item.completionStatus) {
+                    completionBox.checked = true;
+                    itemContainerDiv.classList.add("completed-item");
                 } else {
-                    this.completionBox.checked = false;
-                    this.itemContainerDiv.classList.remove("completed-item");
+                    completionBox.checked = false;
+                    itemContainerDiv.classList.remove("completed-item");
                 }
 
-                if (item.priority === "High") {
-                    this.dueDateDiv.classList.add("priority-high");
-                } else if (item.priority === "Medium") {
-                    this.dueDateDiv.classList.add("priority-medium");
-                } else if (item.priority === "Low") {
-                    this.dueDateDiv.classList.add("priority-low");
+                if (priority) {
+                    dueDateDiv.classList.add(`priority-${priority}`);
                 }
             });
         }
     }
 
-    itemForm() {
+    handleItemForm() {
         const priorities = ["High", "Medium", "Low"];
 
-        this.formContainer = document.createElement("div");
-        this.formContainer.classList.add("new-item-form");
-        this.formHeader = document.createElement("div");
-        this.formHeader.classList.add("form-header");
-        this.formHeaderSpan = document.createElement("span");
+        this.formContainer = this.createElement("div", "new-item-form");
+        this.formHeader = this.createElement("div", "form-header");
+        this.formHeaderSpan = this.createElement("span", "form-header-span");
         this.formHeaderSpan.innerText = "New Item";
-        this.formHeaderSpan.classList.add("form-header-span")
-        this.closeForm = document.createElement("div");
-        this.closeForm.classList.add("close-form");
-        this.closeFormIcon = document.createElement("i");
-        this.closeFormIcon.classList.add("fas", "fa-times", "close-form-icon");
-        this.newItemForm = document.createElement("form");
-        this.itemTitleInput = document.createElement("input");
+        this.closeForm = this.createElement("div", "close-form");
+        this.closeFormIcon = this.createElement("i", "close-form-icon");
+        this.newItemForm = this.createElement("form");
+        this.itemTitleInput = this.createElement("input", "item-name-input");
         this.itemTitleInput.type = "text";
-        this.itemTitleInput.name = "item-name-input";
         this.itemTitleInput.placeholder = "Title: Example Item";
-        this.itemTitleInput.classList.add("item-name-input");
-        this.itemDescInput = document.createElement("textarea");
+        this.itemDescInput = this.createElement("textarea", "item-desc-input");
         this.itemDescInput.wrap = "soft";
         this.itemDescInput.placeholder = "Item Description...";
-        this.itemDescInput.classList.add("item-desc-input");
-        this.prioritySelection = document.createElement("select");
-        this.prioritySelection.classList.add("priority-selection");
-        this.prioritySelection.name = "priorities";        
-        this.itemDueDateInput = document.createElement("input");
+        this.prioritySelection = this.createElement("select", "priority-selection");
+        this.itemDueDateInput = this.createElement("input", "item-duedate-input");
         this.itemDueDateInput.type = "date";
-        this.itemDueDateInput.classList.add("item-duedate-input");
-        this.newItemSubmit = document.createElement("input");
+        this.newItemSubmit = this.createElement("input", null);
         this.newItemSubmit.type = "submit";
         this.newItemSubmit.setAttribute("btn-type", "new-item");
-        this.prioOptionDisabled = document.createElement("option");
-        this;this.prioOptionDisabled.value = "";
+        this.prioOptionDisabled = this.createElement("option", null);
+        this.prioOptionDisabled.value = "";
         this.prioOptionDisabled.selected = "selected";
         this.prioOptionDisabled.disabled = "disabled";
         this.prioOptionDisabled.innerText = "Select Priority";
-        this.prioritySelection.appendChild(this.prioOptionDisabled);
 
-        this.contentBodyDiv.appendChild(this.formContainer)
+        this.contentBodyDiv.appendChild(this.formContainer);
         this.formContainer.appendChild(this.formHeader);
         this.formHeader.appendChild(this.formHeaderSpan);
         this.formHeader.appendChild(this.closeForm);
@@ -346,13 +237,13 @@ class DisplayController {
         this.newItemForm.appendChild(this.itemDueDateInput);
         this.newItemForm.appendChild(this.newItemSubmit);
 
-        for (let i = 0; i < priorities.length; i++) {
-            this.prioOption = document.createElement("option");
-            this.prioOption.value = priorities[i];
-            this.prioOption.innerText = priorities[i];
-            this.prioOption.classList.add("option-text");
-            this.prioritySelection.appendChild(this.prioOption);
+        for (const priority of priorities) {
+            const prioOption = this.createElement("option", null);
+            prioOption.value = priority;
+            prioOption.innerText = priority;
+            this.prioritySelection.appendChild(prioOption);
         }
+
         this.closeForm.addEventListener("click", () => {
             this.formContainer.style.display = "none";
             this.itemTitleInput.value = "";
@@ -360,53 +251,106 @@ class DisplayController {
         });
     }
 
+    handleDeleteItemIcons(projId) {
+        const deleteIcons = document.querySelectorAll(".delete-item");
+        deleteIcons.forEach(icon => {
+            icon.addEventListener("click", () => {
+                const workingItemId = icon.getAttribute("item-id");
+                this.projectsModel.removeItem(projId, workingItemId);
+                this.renderProject(projId);
+            });
+        });
+    }
+
+    handleProjectSettings(projId) {
+        this.projectSettingsDiv.addEventListener("click", () => {
+            this.projectsModel.removeProject(projId);
+            this.clearChildNodes("sidebar");
+            this.renderProject(this.projects[0].id);
+        });
+    }
+
+    handleEditItemIcons(projId) {
+        const editIcons = document.querySelectorAll(".item-edit");
+        editIcons.forEach(icon => {
+            icon.addEventListener("click", event => {
+                const allProjects = JSON.parse(localStorage.getItem("projects"));
+                const itemId = icon.getAttribute("dataset-id");
+                this.formContainer.style.display = "grid";
+                const workingProj = allProjects.find(p => p.id === projId);
+                const workingItem = workingProj.todos.find(i => i.id === itemId);
+                this.formHeaderSpan.innerText = "Edit Item";
+                this.itemTitleInput.value = workingItem.title;
+                this.itemDescInput.value = workingItem.description;
+                this.prioritySelection.value = workingItem.priority;
+                this.itemDueDateInput.value = workingItem.dueDate;
+                this.newItemSubmit.setAttribute("btn-type", "edit");
+                this.newItemSubmit.setAttribute("item-id", itemId);
+            });
+        });
+    }
+
+    handleCompletionBoxes(projId) {
+        const completionBoxes = document.getElementsByName("item-status");
+        completionBoxes.forEach(box => {
+            const itemId = box.getAttribute("item-id");
+            const workingProj = this.projects.find(p => p.id === projId);
+            const workingItem = workingProj.todos.find(i => i.id === itemId);
+            box.addEventListener("click", () => {
+                workingItem.completionStatus = box.checked;
+                localStorage.setItem("projects", JSON.stringify(this.projects));
+                this.clearChildNodes("items");
+                this.renderProject(projId);
+            });
+        });
+
+        this.newItemSubmit.addEventListener("click", () => {
+            const title = this.itemTitleInput.value;
+            const dueDate = this.itemDueDateInput.value;
+            const desc = this.itemDescInput.value;
+            const prio = this.prioritySelection.value;
+            const projectId = this.currentTitleSpan.dataset.id;
+            const completionStatus = false;
+            if (this.newItemSubmit.getAttribute("btn-type") === "new") {
+                this.projectsModel.addItem(title, dueDate, desc, prio, completionStatus, projectId);
+                this.renderProject(projId);
+            } else if (this.newItemSubmit.getAttribute("btn-type") === "edit") {
+                const itemId = this.newItemSubmit.getAttribute("item-id");
+                this.projectsModel.editItem(title, dueDate, desc, prio, completionStatus, projectId, itemId);
+                this.renderProject(projId);
+            }
+        });
+    }
+
     clearChildNodes(area) {
+        const clearElement = (element) => {
+            while (element.firstElementChild) {
+                element.removeChild(element.firstElementChild);
+            }
+        }
+
         if (area === "content") {
-            if (this.contentDiv.firstElementChild) {
-                while (this.contentContainerDiv.firstElementChild) {
-                    this.contentContainerDiv.removeChild(this.contentContainerDiv.firstElementChild);
-                }
-            }
-            while (this.contentDiv.firstElementChild) {
-                this.contentDiv.removeChild(this.contentDiv.firstElementChild);
-            }
+            clearElement(this.contentContainerDiv);
+            clearElement(this.contentDiv);
             if (this.containerDiv.lastElementChild.id === "content") {
                 this.containerDiv.removeChild(this.contentDiv);
             }
         } else if (area === "items") {
-            while (this.itemOptionsDiv.firstElementChild) {
-                this.itemOptionsDiv.removeChild(this.itemOptionsDiv.firstElementChild);
-            }
-            while (this.item.firstElementChild) {
-                this.item.removeChild(this.item.firstElementChild);
-            }
-            while (this.itemContainerDiv.firstElementChild) {
-                this.itemContainerDiv.removeChild(this.itemContainerDiv.firstElementChild);
-            }
+            clearElement(this.itemOptionsDiv);
+            clearElement(this.item);
+            clearElement(this.itemContainerDiv);
         } else if (area === "sidebar") {
-            while (this.addProjectBtn.firstElementChild) {
-                this.addProjectBtn.removeChild(this.addProjectBtn.firstElementChild);
-            }
-            while (this.userProjectsUl.firstElementChild) {
-                this.userProjectsUl.removeChild(this.userProjectsUl.firstElementChild);
-            }
-            while (this.logoDiv.firstElementChild) {
-                this.logoDiv.removeChild(this.logoDiv.firstElementChild);
-            }
-            while(this.sidebarContainerDiv.firstElementChild) {
-                this.sidebarContainerDiv.removeChild(this.sidebarContainerDiv.firstElementChild);
-            }
-            while (this.sidebarDiv.firstElementChild) {
-                this.sidebarDiv.removeChild(this.sidebarDiv.firstElementChild);
-            }
+            clearElement(this.addProjectBtn);
+            clearElement(this.userProjectsUl);
+            clearElement(this.logoDiv);
+            clearElement(this.sidebarContainerDiv);
+            clearElement(this.sidebarDiv);
             this.containerDiv.removeChild(this.sidebarDiv);
             this.createSidebar();
         } else if (area === "all") {
-            while (this.containerDiv.firstElementChild) {
-                this.containerDiv.removeChild(this.containerDiv.firstElementChild);
-            }
+            clearElement(this.containerDiv);
         }
     }
 }
 
-export default DisplayController
+export default DisplayController;
